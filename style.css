@@ -1,0 +1,46 @@
+body {
+    background-image: url("fastfood.jpg");
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-align: center;
+}
+
+h1{
+    font-size: 60px;
+    color:rgb(0, 0, 0)
+}
+.container{
+    background: rgb(255, 255, 255);
+    opacity: 0.8;
+    max-width: 50%; 
+    margin: auto; /* this helps centering */
+    border: 3px solid rgb(255, 255, 255);
+    border-radius: 10px;
+  }
+
+#subheading{
+    position: relative;
+    margin-top: -40px;
+    color:rgb(255, 33, 163)
+
+  }
+
+h2{
+    color:deepskyblue;
+    font-size: 40px;
+}
+/* 
+.left{
+    text-align: left;
+    
+}
+
+.middle{
+    text-align: center;
+    margin-top: -40px;
+}
+
+.right{
+    text-align: right;
+    margin-top: -40px;
+
+} */

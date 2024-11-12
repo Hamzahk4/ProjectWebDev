@@ -6,41 +6,106 @@
     <link rel="stylesheet" href="style.css">
     <title>Hamzah's Calorie Tracker Pro Max</title>
 </head>
-
-
-
 <body>
     <div class="container">
-    <h1>Sigma Calorie Tracker </h1>
-    <h3 id="subheading">(Pro Max Edition)</h3>
+        <h1>Sigma Calorie Tracker</h1>
+        <h3 id="subheading">(Pro Max Edition)</h3>
 
-    <section>
-        <h2>Appetizer</h2>
-        <h4 class="left">Protein:</h4>
-        <button class="left">+</button>
-        <h4 class="left">Carbohydrates:</h4>
-        <h4 class="left"> Fats:</h4>
-    </section>
-<p>------------------------------------------------------------------------------------------------------------------</p>
-    <section>
-        <h2>Entree</h2>
-        <h4 class="left">Protein:</h4>
-        <h4 class="left">Carbohydrates:</h4>
-        <h4 class="left"> Fats:</h4>
-    </section>
-    <p>------------------------------------------------------------------------------------------------------------------</p>
+        <section>
+            <h2>Appetizer</h2>
+            <div class="nutrient">
+                <h4>Protein: <button onclick="updateValue('appetizer', 'protein', 1)">+</button>
+                    <button onclick="updateValue('appetizer', 'protein', -1)">-</button> 
+                    <h4 id="appetizer-protein">0 grams</h4></h4>
+            </div>
+            <div class="nutrient">
+                <h4>Carbohydrates: <button onclick="updateValue('appetizer', 'carbs', 1)">+</button>
+                    <button onclick="updateValue('appetizer', 'carbs', -1)">-</button> 
+                    <h4 id="appetizer-carbs">0 grams</h4></h4>
+            </div>
+            <div class="nutrient">
+                <h4>Fats: <button onclick="updateValue('appetizer', 'fat', 1)">+</button>
+                    <button onclick="updateValue('appetizer', 'fat', -1)">-</button> 
+                    <h4 id="appetizer-fat">0 grams</h4></h4>
+            </div>
+            <h4>Calories: <h4 id="appetizer-calories">0</h4></h4>
+        </section>
 
-    <section>
-        <h2>Dessert</h2>
-        <h4 class="left">Protein:</h4>
-        <h4 class="left">Carbohydrates:</h4>
-        <h4 class="left"> Fats:</h4>
-    </section>
+        <hr>
 
+        <section>
+            <h2>Entree</h2>
+            <div class="nutrient">
+                <h4>Protein: <button onclick="updateValue('entree', 'protein', 1)">+</button>
+                    <button onclick="updateValue('entree', 'protein', -1)">-</button> 
+                    <h4 id="entree-protein">0 grams</h4></h4>
+            </div>
+            <div class="nutrient">
+                <h4>Carbohydrates: <button onclick="updateValue('entree', 'carbs', 1)">+</button>
+                    <button onclick="updateValue('entree', 'carbs', -1)">-</button> 
+                    <h4 id="entree-carbs">0 grams</h4></h4>
+            </div>
+            <div class="nutrient">
+                <h4>Fats: <button onclick="updateValue('entree', 'fat', 1)">+</button>
+                    <button onclick="updateValue('entree', 'fat', -1)">-</button> 
+                    <h4 id="entree-fat">0 grams</h4></h4>
+            </div>
+            <h4>Calories: <h4 id="entree-calories">0</h4></h4>
+        </section>
+
+        <hr>
+
+        <section>
+            <h2>Dessert</h2>
+            <div class="nutrient">
+                <h4>Protein: <button onclick="updateValue('dessert', 'protein', 1)">+</button>
+                    <button onclick="updateValue('dessert', 'protein', -1)">-</button> 
+                    <h4 id="dessert-protein">0 grams</h4></h4>
+            </div>
+            <div class="nutrient">
+                <h4>Carbohydrates: <button onclick="updateValue('dessert', 'carbs', 1)">+</button>
+                    <button onclick="updateValue('dessert', 'carbs', -1)">-</button> 
+                    <h4 id="dessert-carbs">0 grams</h4></h4>
+            </div>
+            <div class="nutrient">
+                <h4>Fats: <button onclick="updateValue('dessert', 'fat', 1)">+</button>
+                    <button onclick="updateValue('dessert', 'fat', -1)">-</button> 
+                    <h4 id="dessert-fat">0 grams</h4></h4>
+            </div>
+            <h4>Calories: <h4 id="dessert-calories">0</h4></h4>
+        </section>
+
+        <hr>
+        <h2>Total Calories: <h4 id="total-calories">0</h4></h2>
     </div>
-<script>src="index.js"</script>
+
+    <script>
+        const meals = {
+            appetizer: { protein: 0, carbs: 0, fat: 0 },
+            entree: { protein: 0, carbs: 0, fat: 0 },
+            dessert: { protein: 0, carbs: 0, fat: 0 }
+        };
+
+        function updateValue(meal, nutrient, change) {
+            meals[meal][nutrient] = Math.max(0, meals[meal][nutrient] + change);
+            document.getElementById(meal + '-' + nutrient).innerText = meals[meal][nutrient] + ' grams';
+            updateCalories(meal);
+        }
+
+        function calculateCalories(protein, carbs, fat) {
+            return (protein * 4) + (carbs * 4) + (fat * 9);
+        }
+
+        function updateCalories(meal) {
+            const mealCalories = calculateCalories(meals[meal].protein, meals[meal].carbs, meals[meal].fat);
+            document.getElementById(meal + '-calories').innerText = mealCalories;
+
+            let totalCalories = 0;
+            for (const mealType in meals) {
+                totalCalories += calculateCalories(meals[mealType].protein, meals[mealType].carbs, meals[mealType].fat);
+            }
+            document.getElementById("total-calories").innerText = totalCalories;
+        }
+    </script>
 </body>
-
-
-
 </html>

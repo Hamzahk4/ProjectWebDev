@@ -28,12 +28,12 @@
                     <button onclick="updateValue('appetizer', 'fat', -1)">-</button> 
                     <h4 id="appetizer-fat">0 grams</h4></h4>
             </div>
-            <h4>Calories: <h4 id="appetizer-calories">0</h4></h4>
+            <h4>Total Appetizer Calories: <h4 id="appetizer-calories">0</h4></h4>
         </section>
 
         <hr>
 
-        <section>
+        <section> 
             <h2>Entree</h2>
             <div class="nutrient">
                 <h4>Protein: <button onclick="updateValue('entree', 'protein', 1)">+</button>
@@ -50,7 +50,7 @@
                     <button onclick="updateValue('entree', 'fat', -1)">-</button> 
                     <h4 id="entree-fat">0 grams</h4></h4>
             </div>
-            <h4>Calories: <h4 id="entree-calories">0</h4></h4>
+            <h4>Total Entree Calories: <h4 id="entree-calories">0</h4></h4>
         </section>
 
         <hr>
@@ -72,39 +72,82 @@
                     <button onclick="updateValue('dessert', 'fat', -1)">-</button> 
                     <h4 id="dessert-fat">0 grams</h4></h4>
             </div>
-            <h4>Calories: <h4 id="dessert-calories">0</h4></h4>
+            <h4>Total Dessert Calories: <h4 id="dessert-calories">0</h4></h4>
         </section>
 
         <hr>
-        <h2>Total Calories: <h4 id="total-calories">0</h4></h2>
+        <h2>Total Calories Of Most Recent Log: <h4 id="total-calories">0</h4></h2>
+        <button id="restart-btn" onclick="restartTracker()">Restart</button> 
     </div>
+    <!-- <button id="suprise" onclick="suprise()">Click me for a suprise</button> -->
 
     <script>
+        // up until now there is 3 groups of portions, each with a class of it. Each portion has 3 macros, labled with specific ID's so we 
+        // can fix them up later. I wanted to seperate them all by portion name and then the macro name so we could tackle each at a time,
+        // since I found doing it otherwise made it very confusing.
+
+        // these are gonna be the values for each portion so we can organize the splitting 
         const meals = {
             appetizer: { protein: 0, carbs: 0, fat: 0 },
             entree: { protein: 0, carbs: 0, fat: 0 },
             dessert: { protein: 0, carbs: 0, fat: 0 }
         };
 
+        // Load total calories from localStorage
+        document.addEventListener("DOMContentLoaded", () => { //AI used because I was having trouble with the syntax of this header
+            const savedCalories = localStorage.getItem("totalCalories");
+            if (savedCalories) {
+                document.getElementById("total-calories").innerText = savedCalories;
+            }
+        });
+
+        // this function takes in the meal type (D,E,A), along with the macro (P,C,F), and has the change depending on what button you press. 
+        // Pressing a + will increase by 1 and vise versa with -.
         function updateValue(meal, nutrient, change) {
-            meals[meal][nutrient] = Math.max(0, meals[meal][nutrient] + change);
-            document.getElementById(meal + '-' + nutrient).innerText = meals[meal][nutrient] + ' grams';
-            updateCalories(meal);
+            meals[meal][nutrient] = Math.max(0, meals[meal][nutrient] + change); //whatever prev val was, add the CHANGE
+            document.getElementById(meal + '-' + nutrient).innerText = meals[meal][nutrient] + ' grams'; 
+            // up to here we are increasing whatever previous value of the nutrient was by CHANGE and adding it to the html text.
+            updateCalories(meal); //updates the calories of that specific meal portion (DEA)
         }
 
         function calculateCalories(protein, carbs, fat) {
             return (protein * 4) + (carbs * 4) + (fat * 9);
-        }
+        } // simply finds the cals per macro according to the rubric
 
         function updateCalories(meal) {
-            const mealCalories = calculateCalories(meals[meal].protein, meals[meal].carbs, meals[meal].fat);
+            const mealCalories = calculateCalories(meals[meal].protein, meals[meal].carbs, meals[meal].fat); // CALCULATES ALL THE CALS FOR ALL MACROS PER SECTION
             document.getElementById(meal + '-calories').innerText = mealCalories;
 
             let totalCalories = 0;
-            for (const mealType in meals) {
+            for (const mealType in meals) { // for each section (A,E,D) add up the totals of all the calories of each macro to get the total for the day
                 totalCalories += calculateCalories(meals[mealType].protein, meals[mealType].carbs, meals[mealType].fat);
             }
-            document.getElementById("total-calories").innerText = totalCalories;
+            document.getElementById("total-calories").innerText = totalCalories; //update at the bottom.
+
+            // Save total cals to the localstorage so we can remember them for the useer
+            localStorage.setItem("totalCalories", totalCalories);
+        }
+
+        function restartTracker() {
+            // Reset all values at the user's discretion
+            for (const mealType in meals) { //every portion in the meals array (D,A,E)
+                meals[mealType].protein=0;
+                meals[mealType].carbs=0;
+                meals[mealType].fat=0;
+
+                document.getElementById(mealType + '-protein').innerText = '0 grams';
+                document.getElementById(mealType + '-carbs').innerText ='0 grams';
+                document.getElementById(mealType + '-fat').innerText ='0 grams';
+                document.getElementById(mealType + '-calories').innerText = '0';
+                // RESET ALL VALUES BACK TO 0 WHEN THE RESTART BUTTON IS CLICKED.
+            }
+            document.getElementById("total-calories").innerText ='0';
+            // Clear total cals
+            localStorage.removeItem("totalCalories"); //get rid of system memory
+
+            // function suprise(){
+            //     alert("yeetus");
+            // }
         }
     </script>
 </body>
